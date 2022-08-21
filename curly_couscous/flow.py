@@ -1,3 +1,4 @@
+from slugify import slugify
 from gitlab import Gitlab
 
 '''
@@ -33,11 +34,20 @@ class Flow(Gitlab):
     def feature_branch_marker(self, marker='feat-'):
         return marker
 
-    def open(self, m):
-        for issue in self.milestone(m).issues():
-            name = slug(issue)
-            branch = self.branch(name).create()
-            self.merge_request().create(name, branch)
+    def open(self, p, m, prefix='Draft: '):
+        p = self.projects.get(p)
+        print(f'{p=} created')
+        for issue in p.milestones.get(m).issues():
+            name = slugify(issue.title)
+            print(f'{issue.iid}-{name=}')
+            branch = p.branches.create({'branch': name, 'ref': 'main'})
+            mr = f'{prefix}merge {name}'
+            print(f'{mr=} created')
+            p.mergerequests.create({'source_branch': name,
+                                    'target_branch': 'main',
+                                    'title': mr,
+                                    'labels': ['flow']})
+
 
     def close(self, m):
         for issue in self.milestone(m).issues():
