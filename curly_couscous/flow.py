@@ -54,6 +54,10 @@ class Flow(Gitlab):
                 b.delete()
                 print(f'{b=} deleted')
 
+    def clean_mr(self, p):
+        for m in p.mergerequests.list():
+            m.delete()
+            print(f'{m=} deleted')
 
     def close(self, m):
         for issue in self.milestone(m).issues():
