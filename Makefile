@@ -35,7 +35,6 @@ lint:             ## Run pep8, black, mypy linters.
 	$(ENV_PREFIX)flake8 curly_couscous/
 	$(ENV_PREFIX)black -l 79 --check curly_couscous/
 	$(ENV_PREFIX)black -l 79 --check tests/
-	$(ENV_PREFIX)mypy --ignore-missing-imports curly_couscous/
 
 .PHONY: test
 test: lint        ## Run tests and generate coverage report.
