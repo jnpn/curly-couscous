@@ -1,0 +1,55 @@
+* gitlab flow support
+
+ Vertically
+
+ - running branches: dev > test > preprod > prod
+ - feat branches: feat-*
+
+ Horizontally
+
+ - milestones
+
+
+* transact                                                             :feat:
+
+  store all ref (running branches and feat branches)
+
+* open-milestone                                                       :feat:
+
+  milestone = { feat }
+
+  for feat in milestone:
+      branch b = feat.name
+      mr m = draft b
+
+* close-milestone                                                      :feat:
+
+  with transaction t
+    if milestone mergeable:
+       for feat in milestone:
+           git co r0:dev
+           git merge feat/br
+    else:
+      rollback t
+
+* shift-milestone                                                      :feat:
+
+  Cascading merge from first running-branch to last running-branch.
+
+  pre:
+    min running branch with milestone tag
+    running branches no milestone tags
+
+  shift milestone running branch r0 to next running branch r1
+  git co r1
+  git merge r0
+  git tag r1 `{milestone}-{r1.name}`
+
+* fix-milestone
+
+  merge fixed feat branch and reshift running branches
+
+* gitlab graph-view plus
+
+  - horizontal seperation for milestones
+  - vertical seperation between feat and running branches
