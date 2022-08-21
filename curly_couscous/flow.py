@@ -42,7 +42,7 @@ class Flow(Gitlab):
             print(f"{issue.iid}-{name=}")
             branch = p.branches.create({"branch": name, "ref": "main"})
             mr = f"{prefix}merge {name}"
-            print(f"{mr=} created")
+            print(f"{mr=} created for {branch=}")
             p.mergerequests.create(
                 {
                     "source_branch": name,
