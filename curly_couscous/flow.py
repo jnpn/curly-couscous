@@ -48,6 +48,12 @@ class Flow(Gitlab):
                                     'title': mr,
                                     'labels': ['flow']})
 
+    def clean_branches(self, p, exclude=['main']):
+        for b in p.branches.list():
+            if b.name not in exclude:
+                b.delete()
+                print(f'{b=} deleted')
+
 
     def close(self, m):
         for issue in self.milestone(m).issues():
