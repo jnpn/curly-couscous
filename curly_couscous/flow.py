@@ -66,12 +66,16 @@ class Flow(Gitlab):
             m.delete()
             print(f"{m=} deleted")
 
-    def close(self, m):
-        for issue in self.milestone(m).issues():
-            branch = issue.branch
-            mr = branch.merge_request()
-            if mr.is_mergeable:
-                mr.close()
+    def close(self, p, m):
+        """
+        p / m -> issues -> mr -> foreach mr.close
+        """
+        for i in p.issues.list():
+            m, *rs = i.related_merge_requets()
+            if m:
+                mr = p.mergerequests.get(m["iid"])
+                if not mr.has_conflicts:
+                    mr.close()
 
     def shift(self, m, fully=False):
         rb = self.running_branches()
