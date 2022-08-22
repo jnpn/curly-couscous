@@ -78,6 +78,8 @@ class Flow(Gitlab):
             b.merge(m.last_merge_commit)
 
 
-def main(self):
+def main():
     g = Flow()
-    g.list_projects()
+    P = g.projects.get(38763378)
+    M = P.milestones.get(2744050)
+    g.open(P.id, M.id)
