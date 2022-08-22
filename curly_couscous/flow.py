@@ -14,8 +14,8 @@ r.milestone(m).shift(ONE_STEP | ALL)
 
 from secrets import private_token
 
-class Project:
 
+class Project:
     def __init__(self, name, id=None):
         self.name = name
         self.p = None
@@ -31,27 +31,40 @@ class Project:
     def delete(self):
         # p = gitlab.projects.get(self.p).delete()
         # self.p = None
+        pass
+
+    def clean_branches(self, exclude=["main"]):
+        for b in self.p.branches.list():
+            if b.name not in exclude:
+                b.delete()
+                print(f"{b=} deleted")
+
+    def clean_mr(self):
+        for m in self.p.mergerequests.list():
+            m.delete()
+            print(f"{m=} deleted")
 
     def commit(self, p):
         data = {
-            'branch': 'main',
-            'commit_message': 'blah blah blah',
-            'actions': [
+            "branch": "main",
+            "commit_message": "blah blah blah",
+            "actions": [
                 {
-                    'action': 'create',
-                    'file_path': 'README.rst',
-                    'content': b'yolo',
+                    "action": "create",
+                    "file_path": "README.rst",
+                    "content": b"yolo",
                 },
                 {
                     # Binary files need to be base64 encoded
-            'action': 'create',
-                    'file_path': 'logo.png',
-                    'content': base64.b64encode('x0x0x0x0x0yolo'),
-                    'encoding': 'base64',
-                }
-            ]
+                    "action": "create",
+                    "file_path": "logo.png",
+                    "content": b"x0x0x0x0x0yolo",
+                    "encoding": "base64",
+                },
+            ],
         }
         commit = p.commits.create(data)
+        return commit
 
     def issue(self, name, desc):
         pass
@@ -61,6 +74,7 @@ class Project:
 
     def mr(self, name, desc, issue=None, branch=None):
         pass
+
 
 class Flow(Gitlab):
     def __init__(self):
@@ -101,17 +115,6 @@ class Flow(Gitlab):
             print(f"trying to link #{issue.iid} to !{mr.iid}")
             issue.description = f"!{mr.iid}"
             issue.save()
-
-    def clean_branches(self, p, exclude=["main"]):
-        for b in p.branches.list():
-            if b.name not in exclude:
-                b.delete()
-                print(f"{b=} deleted")
-
-    def clean_mr(self, p):
-        for m in p.mergerequests.list():
-            m.delete()
-            print(f"{m=} deleted")
 
     def close(self, p, m):
         """
