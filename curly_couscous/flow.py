@@ -51,6 +51,9 @@ class Flow(Gitlab):
                     "labels": ["flow"],
                 }
             )
+            print(f"trying to link #{issue.iid} to !{mr.iid}")
+            issue.description = f"!{mr.iid}"
+            issue.save()
 
     def clean_branches(self, p, exclude=["main"]):
         for b in p.branches.list():
