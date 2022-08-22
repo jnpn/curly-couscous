@@ -38,16 +38,16 @@ class Flow(Gitlab):
         p = self.projects.get(p)
         print(f"using {p=}")
         for issue in p.milestones.get(m).issues():
-            name = slugify(issue.title)
-            print(f"{issue.iid}-{name=}")
-            branch = p.branches.create({"branch": name, "ref": "main"})
-            mr = f"{prefix}merge {name}"
-            print(f"{mr=} created for {branch=}")
-            p.mergerequests.create(
+            branch_name = f"{issue.iid}-{slugify(issue.title)}"
+            print(f"{branch_name=}")
+            branch = p.branches.create({"branch": branch_name, "ref": "main"})
+            mr_title = f"{prefix}merge {branch_name}"
+            print(f"{mr_title=} created for {branch=}")
+            mr = p.mergerequests.create(
                 {
-                    "source_branch": name,
+                    "source_branch": branch_name,
                     "target_branch": "main",
-                    "title": mr,
+                    "title": mr_title,
                     "labels": ["flow"],
                 }
             )
