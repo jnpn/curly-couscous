@@ -14,6 +14,53 @@ r.milestone(m).shift(ONE_STEP | ALL)
 
 from secrets import private_token
 
+class Project:
+
+    def __init__(self, name, id=None):
+        self.name = name
+        self.p = None
+
+    def is_created(self):
+        return self.p is not None
+
+    def create(self):
+        # p = gitlab.projects.create
+        # self.p = p
+        pass
+
+    def delete(self):
+        # p = gitlab.projects.get(self.p).delete()
+        # self.p = None
+
+    def commit(self, p):
+        data = {
+            'branch': 'main',
+            'commit_message': 'blah blah blah',
+            'actions': [
+                {
+                    'action': 'create',
+                    'file_path': 'README.rst',
+                    'content': b'yolo',
+                },
+                {
+                    # Binary files need to be base64 encoded
+            'action': 'create',
+                    'file_path': 'logo.png',
+                    'content': base64.b64encode('x0x0x0x0x0yolo'),
+                    'encoding': 'base64',
+                }
+            ]
+        }
+        commit = p.commits.create(data)
+
+    def issue(self, name, desc):
+        pass
+
+    def branch(self, name, issue=None):
+        pass
+
+    def mr(self, name, desc, issue=None, branch=None):
+        pass
 
 class Flow(Gitlab):
     def __init__(self):
