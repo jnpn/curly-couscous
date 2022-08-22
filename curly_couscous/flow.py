@@ -1,5 +1,5 @@
-from slugify import slugify
 from gitlab import Gitlab
+from slugify import slugify
 
 """
 r = repo(url, token)
