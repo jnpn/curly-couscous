@@ -36,7 +36,7 @@ class Flow(Gitlab):
 
     def open(self, p, m, prefix="Draft: "):
         p = self.projects.get(p)
-        print(f"{p=} created")
+        print(f"using {p=}")
         for issue in p.milestones.get(m).issues():
             name = slugify(issue.title)
             print(f"{issue.iid}-{name=}")
